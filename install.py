@@ -21,7 +21,7 @@ objectExtension = torch.utils.ffi.create_extension(
 	sources=strSources,
 	verbose=False,
 	with_cuda=any(strDefine[0] == 'WITH_CUDA' for strDefine in strDefines),
-	package=False,
+ 	package=False,
 	relative_to=strBasepath,
 	include_dirs=[os.path.expandvars('$CUDA_HOME') + '/include'],
 	define_macros=strDefines,
