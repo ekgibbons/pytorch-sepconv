@@ -145,7 +145,7 @@ def main():
     pathRead = "/v/raid1a/egibbons/data/deep-slice"
 
     dataRunning = None
-    for ii in range(8):  # after 8 the data gets sketchy...
+    for ii in range(10):  # after 8 the data gets sketchy...
         dataTemp = np.load("%s/training_hearts_%02i.npy" % (pathRead, ii))
         if (ii != 0):
             dataRunning = np.concatenate((dataRunning,dataTemp),axis=3)
@@ -192,7 +192,8 @@ def main():
 
     trainLoader, valLoader = DataLoader.GetTrainValLoader(XTensor,yTensor,
                                                           batch_size=batchSize,
-                                                          valid_size=validSize)
+                                                          valid_size=validSize,
+                                                          pin_memory=True)
 
     dataLoaders = {}
     dataLoaders["train"] = trainLoader

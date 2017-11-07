@@ -7,8 +7,6 @@ import numpy as np
 from scipy import io
 from matplotlib import pyplot as plt
 
-        
-
 def DataGenerator(data):
     """
     """
@@ -25,13 +23,13 @@ def DataGenerator(data):
         middleFrameBatch[ii] = data[:,:,1,ii]
         lastFrameBatch[ii] = data[:,:,2,ii]
 
-        firstFrameBatch[ii+nc//3] = data[:,:,1,ii]
-        middleFrameBatch[ii+nc//3] = data[:,:,2,ii]
-        lastFrameBatch[ii+nc//3] = data[:,:,3,ii]
+        firstFrameBatch[ii+nc] = data[:,:,1,ii]
+        middleFrameBatch[ii+nc] = data[:,:,2,ii]
+        lastFrameBatch[ii+nc] = data[:,:,3,ii]
 
-        firstFrameBatch[ii+2*nc//3] = data[:,:,2,ii]
-        middleFrameBatch[ii+2*nc//3] = data[:,:,3,ii]
-        lastFrameBatch[ii+2*nc//3] = data[:,:,4,ii]
+        firstFrameBatch[ii+2*nc] = data[:,:,2,ii]
+        middleFrameBatch[ii+2*nc] = data[:,:,3,ii]
+        lastFrameBatch[ii+2*nc] = data[:,:,4,ii]
 
     firstFrameBatch = firstFrameBatch[:,:,:,np.newaxis]
     middleFrameBatch = middleFrameBatch[:,:,:,np.newaxis]
