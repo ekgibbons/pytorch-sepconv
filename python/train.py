@@ -87,7 +87,7 @@ def TrainModel(dataLoaders, datasetSizes, model,
                 print("val Loss decreased from: {:0.4g} to {:0.4g}...saving model".format(bestLoss,
                                                                                           epochLoss))
                 bestLoss = epochLoss
-                torch.save(model.state_dict(),"../models/network-ft.pytorch")
+                torch.save(model.state_dict(),"../models/network-ft-temp.pytorch")
                 bestModelWeights = copy.deepcopy(model.state_dict())
 
         timeEpoch = time.time() - epochStart
@@ -109,7 +109,8 @@ def main():
     """
     """
     
-    torch.cuda.device(0) # change this if you have a multiple graphics cards and you want to utilize them
+    # change this if you have a multiple graphics cards 
+    torch.cuda.device(0) 
     
     use_gpu = torch.cuda.is_available()
     
@@ -125,6 +126,8 @@ def main():
     beta2 = 0.999
     learningRate = 0.001
     batchSize = 16
+    spatial = False
+    
 
     # Determine the loss function
     # lossFunction = torch.nn.L1Loss()
@@ -144,24 +147,29 @@ def main():
     print("Load data...")
     pathRead = "/v/raid1a/egibbons/data/deep-slice"
 
-    dataRunning = None
-    for ii in range(10):  # after 8 the data gets sketchy...
-        dataTemp = np.load("%s/training_hearts_%02i.npy" % (pathRead, ii))
-        if (ii != 0):
-            dataRunning = np.concatenate((dataRunning,dataTemp),axis=3)
-        elif ii is 0:
-            dataRunning = dataTemp
+    if spatial is True:
+        dataRunning = None
+        for ii in range(10):
+            dataTemp = np.load("%s/training_hearts_%02i.npy" % (pathRead, ii))
+            if (ii != 0):
+                dataRunning = np.concatenate((dataRunning,dataTemp),axis=3)
+            elif ii is 0:
+                dataRunning = dataTemp
 
-    print(dataRunning.shape)
-    dataRunning = imtools.crop(dataRunning,128,128)
-    print(dataRunning.shape)
+        print(dataRunning.shape)
+        dataRunning = imtools.crop(dataRunning,128,128)
+        print(dataRunning.shape)
+        
+        # set up the data
+        X, y = GenerateHeartData.DataGenerator(dataRunning)
 
-    # set up the data
-    X, y = GenerateHeartData.DataGenerator(dataRunning)
-
-    imEx = np.concatenate((X[1000,:,:,0].squeeze(),
-                           y[1000,:,:,0].squeeze(),
-                           X[1000,:,:,1].squeeze()),axis=1)
+    else:
+        X = np.load("%s/XTemporal.npy" % pathRead)
+        y = np.load("%s/yTemporal.npy" % pathRead)
+    
+    # imEx = np.concatenate((X[1000,:,:,0].squeeze(),
+    #                        y[1000,:,:,0].squeeze(),
+    #                        X[1000,:,:,1].squeeze()),axis=1)
 
     # plt.figure()
     # plt.imshow(imEx,cmap="gray")
